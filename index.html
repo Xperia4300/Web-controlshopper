@@ -1,0 +1,1287 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ControlShopper — Controla tus ganancias, turno tras turno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:          #071e1a;
+  --bg-2:        #0b2822;
+  --bg-3:        #050f0d;
+  --card:        #0e3028;
+  --green:       #0f5c4d;
+  --green-deep:  #0a4136;
+  --mint:        #22c99e;
+  --mint-dim:    rgba(34,201,158,0.11);
+  --orange:      #e8960c;
+  --orange-dim:  rgba(232,150,12,0.12);
+  --text:        #eaf2ef;
+  --text-dim:    #92b0aa;
+  --text-muted:  #4d6b64;
+  --line:        rgba(234,242,239,0.09);
+  --radius:      18px;
+  --trust:       rgba(34,201,158,0.08);
+  --trust-border:rgba(34,201,158,0.22);
+  box-sizing: border-box;
+}
+*, *::before, *::after { box-sizing: inherit; margin: 0; padding: 0; }
+html { scroll-padding-top: 64px; scroll-behavior: smooth; }
+body {
+  padding-top: 64px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', -apple-system, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+/* NAV */
+header.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(7,30,26,0.94);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 28px; max-width: 1120px; margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; letter-spacing: -0.01em; }
+.brand-mark {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(145deg, #127862, #0a3f34);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.brand-mark svg { width: 19px; height: 19px; }
+.nav-cta {
+  background: var(--mint); color: #06231c; font-weight: 700; font-size: 0.76rem;
+  padding: 6px 13px; border-radius: 999px; cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s; white-space: nowrap;
+}
+.nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* HERO */
+.hero { padding: 72px 0 56px; }
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: 0; max-width: 720px; }
+.hero-visual { display: none; }
+.stat-float { display: none; }
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--mint-dim); border: 1px solid rgba(46,207,166,0.28);
+  color: var(--mint); font-size: 0.81rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 999px; margin-bottom: 26px;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--mint);
+  animation: pulse-dot 2.6s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(0.75); }
+}
+
+h1 {
+  font-size: clamp(2.4rem, 4.8vw, 3.75rem);
+  font-weight: 900; letter-spacing: -0.025em; line-height: 1.05;
+}
+h1 .accent { color: var(--mint); }
+.hero p.lead {
+  margin-top: 20px; font-size: 1.12rem; color: var(--text-dim);
+  max-width: 46ch; line-height: 1.65;
+}
+
+.email-form { margin-top: 32px; display: flex; flex-direction: column; gap: 10px; }
+.email-row { display: flex; gap: 8px; max-width: 430px; }
+.email-input {
+  flex: 1; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.16);
+  border-radius: 12px; padding: 14px 18px; font-size: 0.97rem; color: var(--text);
+  font-family: inherit; outline: none; transition: border-color 0.2s;
+}
+.email-input::placeholder { color: rgba(234,242,239,0.32); }
+.email-input:focus { border-color: rgba(46,207,166,0.45); }
+.btn-primary {
+  background: var(--orange); color: #1a0e00; font-weight: 800; font-size: 0.94rem;
+  padding: 14px 22px; border-radius: 12px; border: none; cursor: pointer;
+  font-family: inherit; white-space: nowrap; flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.hero-note { color: var(--text-dim); font-size: 0.82rem; }
+
+/* TRUST STRIP */
+.trust-strip {
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  background: var(--trust);
+  padding: 14px 0;
+}
+.trust-items {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-wrap: wrap;
+}
+.trust-item {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 0.80rem; font-weight: 600; color: var(--text-dim);
+  padding: 6px 14px; border-radius: 999px;
+  border: 1px solid var(--trust-border);
+  background: rgba(34,201,158,0.06);
+}
+.trust-item svg { width: 14px; height: 14px; stroke: var(--mint); flex-shrink: 0; }
+
+.form-success {
+  display: none; flex-direction: column; gap: 8px;
+  padding: 18px 20px; border-radius: 14px;
+  background: var(--mint-dim); border: 1px solid rgba(46,207,166,0.25);
+  max-width: 430px;
+}
+.form-success p { font-weight: 700; font-size: 0.96rem; }
+.form-success small { color: var(--text-dim); font-size: 0.84rem; }
+
+.hero-visual { position: relative; display: flex; justify-content: center; }
+.hero-visual img {
+  border-radius: 26px; max-height: 580px; width: auto;
+  box-shadow: 0 44px 90px -28px rgba(0,0,0,0.75);
+}
+.stat-float {
+  position: absolute;
+  background: rgba(12,43,37,0.88);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(46,207,166,0.20); border-radius: 14px;
+  padding: 13px 17px; font-weight: 800; font-size: 1.25rem; color: var(--text);
+  box-shadow: 0 18px 48px -12px rgba(0,0,0,0.55);
+}
+.stat-float span { display: block; font-weight: 500; font-size: 0.69rem; color: var(--text-dim); margin-top: 3px; }
+.stat-1 { top: 9%; left: -7%; }
+.stat-2 { bottom: 11%; right: -5%; }
+
+/* ROLES STRIP */
+.roles-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-2); }
+.roles-inner {
+  display: flex; justify-content: center; gap: 52px;
+  padding: 22px 28px; max-width: 1120px; margin: 0 auto; flex-wrap: wrap;
+}
+.role-item { display: flex; align-items: center; gap: 10px; color: var(--text-dim); font-weight: 600; font-size: 0.94rem; }
+.role-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.role-item b { color: var(--text); }
+
+/* SECTION STRUCTURE */
+section { padding: 96px 0; }
+.section-head { max-width: 600px; margin-bottom: 56px; }
+.section-label { color: var(--mint); font-weight: 700; font-size: 0.83rem; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 14px; }
+h2 { font-size: clamp(1.9rem, 3.2vw, 2.7rem); font-weight: 900; letter-spacing: -0.02em; line-height: 1.10; }
+.section-head p { margin-top: 16px; color: var(--text-dim); font-size: 1.04rem; max-width: 52ch; line-height: 1.65; }
+
+/* HOW IT WORKS */
+.steps-wrap { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.steps-grid { display: grid; grid-template-columns: repeat(3,1fr); }
+.step-item {
+  padding: 44px 36px; border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.step-item:last-child { border-right: none; }
+.step-num { font-size: 0.75rem; font-weight: 800; color: var(--mint); letter-spacing: 0.08em; opacity: 0.6; }
+.step-icon {
+  width: 46px; height: 46px; border-radius: 13px;
+  background: var(--mint-dim); border: 1px solid rgba(46,207,166,0.18);
+  display: flex; align-items: center; justify-content: center;
+}
+.step-icon svg { width: 22px; height: 22px; stroke: var(--mint); }
+.step-item h3 { font-size: 1.04rem; font-weight: 800; letter-spacing: -0.01em; }
+.step-item p { color: var(--text-dim); font-size: 0.91rem; line-height: 1.62; }
+
+/* FEATURES */
+.feature-row {
+  display: grid; grid-template-columns: 1fr; gap: 0;
+  padding: 48px 0; border-top: 1px solid var(--line);
+  max-width: 680px;
+}
+.feature-row:first-of-type { border-top: none; }
+.feature-row.reverse .feature-text { order: initial; }
+.feature-row.reverse .feature-shot  { order: initial; }
+
+.feature-label {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--orange-dim); color: var(--orange);
+  font-weight: 700; font-size: 0.79rem; padding: 5px 12px; border-radius: 8px; margin-bottom: 18px;
+}
+.feature-label svg { width: 13px; height: 13px; flex-shrink: 0; }
+.feature-text h3 {
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem); font-weight: 800;
+  letter-spacing: -0.015em; margin-bottom: 12px; line-height: 1.2;
+}
+.feature-text p { color: var(--text-dim); font-size: 1.01rem; max-width: 56ch; line-height: 1.66; }
+.feature-shot { display: none; }
+
+/* ROLE CARDS */
+.role-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.role-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 30px 26px;
+  transition: border-color 0.2s, transform 0.22s;
+  cursor: default;
+}
+.role-card:hover { border-color: rgba(46,207,166,0.22); transform: translateY(-2px); }
+.role-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+}
+.role-icon svg { width: 24px; height: 24px; }
+.role-card h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; }
+.role-card p { color: var(--text-dim); font-size: 0.92rem; line-height: 1.6; }
+
+/* PRICING */
+.pricing-wrap { background: var(--bg-3); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 740px; }
+.pricing-card { border-radius: var(--radius); padding: 34px 30px; }
+.pricing-card.free { background: var(--card); border: 1px solid var(--line); }
+.pricing-card.pro  {
+  background: linear-gradient(148deg, #0f5c4d 0%, #083527 100%);
+  border: 1px solid rgba(46,207,166,0.28);
+}
+.pricing-badge {
+  display: inline-block; font-size: 0.71rem; font-weight: 800;
+  padding: 3px 10px; border-radius: 999px; margin-bottom: 18px; letter-spacing: 0.03em;
+}
+.pricing-tier { font-size: 1.06rem; font-weight: 700; margin-bottom: 8px; }
+.pricing-price { font-size: 2.4rem; font-weight: 900; letter-spacing: -0.025em; margin: 4px 0; font-variant-numeric: tabular-nums; }
+.pricing-price sup { font-size: 1rem; font-weight: 700; vertical-align: super; margin-right: 2px; }
+.pricing-period { color: var(--text-dim); font-size: 0.84rem; margin-bottom: 24px; }
+.pricing-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+.pricing-list li { font-size: 0.91rem; padding-left: 22px; position: relative; color: var(--text-dim); line-height: 1.5; }
+.pricing-card.pro .pricing-list li { color: rgba(234,242,239,0.82); }
+.pricing-list li::before { content: "✓"; position: absolute; left: 0; color: var(--mint); font-weight: 800; }
+.pricing-note { margin-top: 16px; font-size: 0.76rem; color: var(--text-muted); }
+
+/* COMPARISON */
+.compare-wrap { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.compare-col { border-radius: var(--radius); padding: 32px 28px; }
+.compare-col.bad  { background: rgba(255,255,255,0.025); border: 1px solid var(--line); }
+.compare-col.good { background: linear-gradient(152deg, #0f5c4d, #0a4136); border: 1px solid rgba(46,207,166,0.28); }
+.compare-col h4 { font-size: 1.08rem; font-weight: 800; margin-bottom: 20px; }
+.compare-col.bad h4 { color: var(--text-dim); }
+.compare-col ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.compare-col li { font-size: 0.95rem; padding-left: 26px; position: relative; line-height: 1.5; }
+.compare-col.bad li { color: var(--text-dim); }
+.compare-col.bad  li::before { content: "✕"; position: absolute; left: 0; color: #e5484d; font-weight: 800; }
+.compare-col.good li::before { content: "✓"; position: absolute; left: 0; color: var(--mint); font-weight: 800; }
+
+/* STATS */
+.stats-band {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 24px;
+  text-align: center; padding: 68px 0;
+}
+.stat-num {
+  font-size: clamp(2.1rem, 3.8vw, 2.9rem); font-weight: 900;
+  color: var(--mint); letter-spacing: -0.025em; font-variant-numeric: tabular-nums;
+}
+.stat-label { color: var(--text-dim); font-size: 0.87rem; margin-top: 7px; line-height: 1.45; }
+
+/* REVIEWS */
+.reviews-wrap { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.reviews-grid {
+  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; padding-bottom: 12px;
+}
+.reviews-grid::-webkit-scrollbar { display: none; }
+.reviews-grid { -ms-overflow-style: none; scrollbar-width: none; }
+.review-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 26px 22px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-width: 280px; max-width: 300px; scroll-snap-align: start; flex-shrink: 0;
+}
+.review-stars { color: var(--orange); font-size: 0.88rem; letter-spacing: 3px; }
+.review-text { color: var(--text); font-size: 0.95rem; line-height: 1.62; flex-grow: 1; }
+.review-user { display: flex; align-items: center; gap: 12px; }
+.review-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.84rem; color: #06231c; flex-shrink: 0;
+}
+.review-name { font-weight: 700; font-size: 0.89rem; }
+.review-role { color: var(--text-dim); font-size: 0.79rem; margin-top: 2px; }
+.review-verified {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.72rem; font-weight: 700; color: var(--mint);
+  opacity: 0.78; margin-bottom: 4px;
+}
+.review-verified svg { width: 12px; height: 12px; stroke: var(--mint); }
+
+/* PRICING GUARANTEE */
+.pricing-guarantee {
+  display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+  margin-top: 36px; padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.guarantee-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.84rem; font-weight: 600; color: var(--text-dim);
+}
+.guarantee-item svg { width: 16px; height: 16px; stroke: var(--mint); flex-shrink: 0; }
+
+/* FAQ */
+.faq-item { border-top: 1px solid var(--line); padding: 22px 0; }
+.faq-item:last-child { border-bottom: 1px solid var(--line); }
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; font-weight: 700; font-size: 1.01rem; gap: 20px;
+  background: none; border: none; color: var(--text); font-family: inherit;
+  width: 100%; text-align: left; padding: 0;
+}
+.faq-q .plus {
+  font-size: 1.45rem; color: var(--mint); flex-shrink: 0;
+  transition: transform 0.22s ease; font-weight: 300; line-height: 1;
+}
+.faq-item[data-open="true"] .plus { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.28s ease; }
+.faq-a-inner { padding-top: 14px; color: var(--text-dim); font-size: 0.95rem; max-width: 58ch; line-height: 1.65; }
+
+/* CTA FINAL */
+.cta-final { text-align: center; padding: 116px 0; }
+.cta-final h2 { margin-bottom: 18px; }
+.cta-lead { color: var(--text-dim); font-size: 1.08rem; max-width: 46ch; margin: 0 auto 40px; line-height: 1.65; }
+.cta-form-wrap { display: inline-flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 440px; }
+.cta-email-row { display: flex; gap: 8px; width: 100%; }
+.cta-note { color: var(--text-muted); font-size: 0.80rem; }
+.cta-divider {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 0.80rem; color: var(--text-muted); width: 100%;
+}
+.cta-divider::before, .cta-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.btn-whatsapp {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(37,211,102,0.09); color: #4ade80;
+  border: 1px solid rgba(37,211,102,0.22);
+  font-weight: 700; font-size: 0.91rem; padding: 13px 22px; border-radius: 12px;
+  cursor: pointer; font-family: inherit; transition: background 0.15s;
+}
+.btn-whatsapp:hover { background: rgba(37,211,102,0.15); }
+.btn-whatsapp svg { width: 17px; height: 17px; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--line); padding: 42px 0; }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.footer-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 0.9rem; color: var(--text-dim); }
+footer p { color: var(--text-muted); font-size: 0.82rem; }
+
+/* SCROLL REVEAL */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.rd1 { transition-delay: 0.08s; }
+.rd2 { transition-delay: 0.16s; }
+.rd3 { transition-delay: 0.24s; }
+.rd4 { transition-delay: 0.32s; }
+
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+  .hero-visual img { max-height: 370px; }
+  .stat-float { display: none; }
+  .email-row { flex-direction: column; max-width: 100%; }
+  .btn-primary { padding: 16px; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .step-item { border-right: none; border-bottom: 1px solid var(--line); }
+  .step-item:last-child { border-bottom: none; }
+  .feature-row, .feature-row.reverse { grid-template-columns: 1fr; gap: 0; }
+  .role-cards { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 100%; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .stats-band { grid-template-columns: repeat(2,1fr); }
+  .review-card { min-width: 260px; }
+  .roles-inner { flex-direction: column; align-items: flex-start; gap: 14px; }
+  section { padding: 60px 0; }
+  .cta-final { padding: 80px 0; }
+  .cta-email-row { flex-direction: column; }
+  .cta-form-wrap { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal.visible { opacity: 1; transform: none; transition: none; }
+  .status-dot { animation: none; }
+}
+
+/* ──────────────────────────────────────────
+   VISUAL UPGRADE v2
+   ────────────────────────────────────────── */
+
+/* Atmospheric background glows */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 15% -10%, rgba(46,207,166,.058) 0%, transparent 52%),
+    radial-gradient(ellipse 55% 45% at 88% 108%, rgba(15,92,77,.11) 0%, transparent 50%);
+}
+section, div.steps-wrap, div.pricing-wrap, div.compare-wrap,
+div.reviews-wrap, div.roles-strip, footer, .hero { position: relative; z-index: 1; }
+
+/* Nav */
+header.nav {
+  background: rgba(7,31,26,.93);
+  border-bottom-color: rgba(46,207,166,.10);
+  box-shadow: 0 1px 0 rgba(0,0,0,.22);
+}
+.brand-mark {
+  background: linear-gradient(145deg, #17a88a, #0b5848);
+  box-shadow: 0 2px 12px rgba(46,207,166,.28);
+}
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; font-size: .80rem;
+  box-shadow: 0 2px 12px rgba(46,207,166,.22);
+}
+
+/* Status pill */
+.status-pill {
+  background: linear-gradient(90deg, rgba(46,207,166,.16), rgba(46,207,166,.07));
+  border-color: rgba(46,207,166,.34);
+}
+
+/* Google Play button */
+.btn-gplay {
+  display: inline-flex; align-items: center; gap: 14px;
+  background: var(--mint); color: #051f18;
+  font-weight: 800; font-family: inherit;
+  padding: 16px 28px; border-radius: 14px;
+  border: none; cursor: pointer;
+  text-decoration: none; line-height: 1;
+  box-shadow: 0 6px 28px rgba(46,207,166,.32);
+  transition: transform .18s, box-shadow .18s, background .15s;
+}
+.btn-gplay:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 44px rgba(46,207,166,.42);
+  background: #2ed6ab;
+}
+.btn-gplay svg { width: 26px; height: 26px; flex-shrink: 0; }
+.btn-gplay-text { display: flex; flex-direction: column; gap: 2px; }
+.btn-gplay-sub { font-size: .67rem; font-weight: 600; opacity: .72; letter-spacing: .06em; text-transform: uppercase; }
+.btn-gplay-main { font-size: 1.06rem; font-weight: 900; letter-spacing: -.02em; }
+
+/* Hero download block */
+.hero-download { margin-top: 36px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.hero-trust {
+  display: flex; align-items: center; gap: 14px;
+  color: var(--text-muted); font-size: .80rem; font-weight: 600;
+}
+.hero-trust span { display: flex; align-items: center; gap: 5px; }
+.hero-trust .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
+
+/* Step icon enhancement */
+.step-icon {
+  background: linear-gradient(135deg, rgba(46,207,166,.16), rgba(46,207,166,.06));
+  border-color: rgba(46,207,166,.22);
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.step-item { transition: background .22s; }
+.step-item:hover { background: rgba(255,255,255,.018); }
+
+/* Role cards */
+.role-card {
+  background: linear-gradient(155deg, #0f342c, #0a2921);
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+}
+.role-card:hover {
+  border-color: rgba(46,207,166,.28);
+  box-shadow: 0 8px 30px rgba(0,0,0,.28), 0 0 0 1px rgba(46,207,166,.10);
+  transform: translateY(-3px);
+}
+
+/* Stats – gradient text */
+.stat-num {
+  background: linear-gradient(135deg, #2ecfa6 20%, #18b087 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Review cards */
+.review-card {
+  background: linear-gradient(155deg, #0f342c, #0a2921);
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+  transition: border-color .22s, transform .22s, box-shadow .22s;
+}
+.review-card:hover {
+  border-color: rgba(46,207,166,.22);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,.28);
+}
+
+/* Pricing pro glow */
+.pricing-card.pro {
+  box-shadow: 0 16px 56px rgba(46,207,166,.15);
+  border-color: rgba(46,207,166,.36);
+}
+.pricing-note { color: var(--mint); opacity: .72; font-size: .77rem; margin-top: 18px; }
+
+/* CTA final atmosphere */
+.cta-final { position: relative; overflow: hidden; }
+.cta-final::before {
+  content: ''; position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 500px; pointer-events: none;
+  background: radial-gradient(ellipse, rgba(46,207,166,.09) 0%, transparent 65%);
+}
+.cta-final > .wrap { position: relative; }
+
+/* CTA download block */
+.cta-dl-block {
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+  margin-top: 4px;
+}
+.cta-dl-trust {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;
+  color: var(--text-muted); font-size: .82rem; font-weight: 600;
+}
+.cta-dl-trust span { display: flex; align-items: center; gap: 6px; }
+.cta-dl-trust .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
+
+/* Stat floats – refined */
+.stat-float {
+  border-color: rgba(46,207,166,.26);
+  box-shadow: 0 20px 60px -15px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* Footer */
+footer { background: var(--bg-3); }
+
+@media (max-width: 560px) {
+  .hero-trust { flex-wrap: wrap; }
+  .cta-dl-trust { gap: 10px; }
+}
+
+/* ── HAMBURGER NAV ── */
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-burger {
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; width: 38px; height: 38px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+  border-radius: 8px; transition: background .15s;
+}
+.nav-burger:hover { background: rgba(46,207,166,.10); }
+.nav-burger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: transform .25s, opacity .25s;
+  transform-origin: center;
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav-drawer {
+  display: none;
+  flex-direction: column;
+  background: rgba(7,31,26,.97);
+  border-top: 1px solid rgba(46,207,166,.12);
+  padding: 8px 0 16px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .3s ease;
+}
+.nav-drawer.open { max-height: 400px; }
+.nav-drawer-link {
+  padding: 14px 24px; font-size: 1.01rem; font-weight: 600;
+  color: rgba(234,242,239,.78);
+  border-bottom: 1px solid rgba(46,207,166,.07);
+  transition: color .15s, background .15s;
+  display: block;
+}
+.nav-drawer-link:last-child { border-bottom: none; }
+.nav-drawer-link:hover { color: var(--mint); background: rgba(46,207,166,.06); }
+.nav-drawer-cta {
+  margin: 10px 24px 0; border-radius: 10px; text-align: center;
+  background: var(--mint); color: #06231c !important; font-weight: 800;
+  border-bottom: none !important;
+}
+.nav-drawer-cta:hover { background: #1fe0b0; }
+
+/* ── WHATSAPP FLOAT ── */
+.wa-float {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25d366;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(37,211,102,.45), 0 2px 8px rgba(0,0,0,.22);
+  color: #ffffff;
+  transition: transform .2s, box-shadow .2s;
+}
+.wa-float:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 12px 36px rgba(37,211,102,.55); }
+.wa-float svg { width: 30px; height: 30px; }
+
+/* ── MOBILE SPACING FIXES ── */
+@media (max-width: 860px) {
+  .nav-burger { display: flex; }
+  .nav-drawer { display: flex; }
+  .nav-cta { display: none; }
+
+  /* Hero: compact */
+  .hero { padding: 48px 0 36px; }
+  .hero-grid { gap: 24px; }
+  .hero-visual { margin-top: 0; }
+  .hero-visual img {
+    max-height: 280px;
+    width: auto;
+    margin: 0 auto;
+    border-radius: 20px;
+  }
+  /* Keep image from taking too much vertical space */
+  .stat-float { display: none; }
+
+  /* Sections: tighter */
+  section { padding: 48px 0; }
+  .cta-final { padding: 56px 0; }
+
+  /* Features: image first, less gap */
+  .feature-row, .feature-row.reverse { gap: 20px; }
+  .feature-shot img { max-height: 300px; margin: 0 auto; }
+
+  /* Steps: compact */
+  .step-item { padding: 28px 20px; }
+
+  /* Role cards */
+  .role-card { padding: 22px 18px; }
+
+  /* Pricing: center single card */
+  .pricing-grid { max-width: 100%; }
+  .pricing-card { padding: 28px 22px; }
+
+  /* Stats */
+  .stats-band { gap: 16px; padding: 40px 0; }
+  .stat-num { font-size: clamp(1.7rem,7vw,2.4rem); }
+
+  /* Section head */
+  .section-head { margin-bottom: 32px; }
+
+  /* Guarantee items */
+  .pricing-guarantee { gap: 18px; }
+
+  /* WhatsApp: slightly smaller on mobile */
+  .wa-float { width: 50px; height: 50px; bottom: 20px; right: 16px; }
+  .wa-float svg { width: 26px; height: 26px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 3h2l.6 3M6.6 6h14l-1.6 8H8L6.6 6Z" stroke="#eaf5f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="9" cy="19" r="1.4" fill="#eaf5f1"/>
+          <circle cx="16" cy="19" r="1.4" fill="#eaf5f1"/>
+        </svg>
+      </div>
+      ControlShopper
+    </div>
+    <div class="nav-right">
+      <a class="nav-cta" href="#cta">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M3.18 23.75c.4.22.85.25 1.27.08l13.12-7.57-2.9-2.9-11.49 10.39ZM.64 1.67C.24 2.05 0 2.63 0 3.38v17.24c0 .75.24 1.33.64 1.71L.75 22.4 12.1 11.07v-.27L.75 1.34.64 1.67ZM20.96 9.6l-2.8-1.62L15.2 11l2.97 2.97 2.79-1.61c.8-.46.8-1.2 0-1.76ZM4.45.17C4.03 0 3.58.04 3.18.26l.04.04 11.4 11.4-2.97-2.97L4.45.17Z"/></svg>
+        Descargar gratis
+      </a>
+      <button class="nav-burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <a href="#como-funciona" class="nav-drawer-link">Cómo funciona</a>
+    <a href="#funciones" class="nav-drawer-link">Funciones</a>
+    <a href="#para-quien" class="nav-drawer-link">Para quién</a>
+    <a href="#precio" class="nav-drawer-link">Precio</a>
+    <a href="#cta" class="nav-drawer-link nav-drawer-cta">Descargar gratis</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="status-pill">
+        <span class="status-dot" aria-hidden="true"></span>
+        Disponible en Google Play · Android
+      </div>
+      <h1>Tus ganancias, <span class="accent">claras desde el principio</span></h1>
+      <p class="lead">La app para shoppers, pickers y drivers que calcula tu neto en tiempo real: tarifa base, SKUs, kilómetros y multiorden — sin calculadora.</p>
+
+      <div class="hero-download">
+        <a class="btn-gplay" href="#cta">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.18 23.75c.4.22.85.25 1.27.08l13.12-7.57-2.9-2.9-11.49 10.39ZM.64 1.67C.24 2.05 0 2.63 0 3.38v17.24c0 .75.24 1.33.64 1.71L.75 22.4 12.1 11.07v-.27L.75 1.34.64 1.67ZM20.96 9.6l-2.8-1.62L15.2 11l2.97 2.97 2.79-1.61c.8-.46.8-1.2 0-1.76ZM4.45.17C4.03 0 3.58.04 3.18.26l.04.04 11.4 11.4-2.97-2.97L4.45.17Z"/></svg>
+          <span class="btn-gplay-text">
+            <span class="btn-gplay-sub">Disponible en</span>
+            <span class="btn-gplay-main">Google Play</span>
+          </span>
+        </a>
+        <p class="hero-trust">
+          <span>3 días gratis</span>
+          <span class="dot"></span>
+          <span>Sin tarjeta</span>
+          <span class="dot"></span>
+          <span>Android</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      
+      <div class="stat-float stat-1">$18.561<span>neto del día</span></div>
+      <div class="stat-float stat-2">3 pedidos<span>en una ruta</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="wrap">
+    <div class="trust-items">
+      <span class="trust-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+        Sin contrato
+      </span>
+      <span class="trust-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        Cancela cuando quieras
+      </span>
+      <span class="trust-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3m-3 3h3m-6.75 3h.008v.008H6.75V15Zm0-3h.008v.008H6.75V12Zm0-3h.008v.008H6.75V9Z"/></svg>
+        Datos solo en tu celular
+      </span>
+      <span class="trust-item">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"/></svg>
+        Soporte real por WhatsApp
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ROLES STRIP -->
+<div class="roles-strip">
+  <div class="roles-inner">
+    <div class="role-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span><b>Shopper</b> — reparto con vehículo</span>
+    </div>
+    <div class="role-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+      <span><b>Picker</b> — preparación en tienda</span>
+    </div>
+    <div class="role-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/>
+        <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+      <span><b>Driver</b> — solo despacho</span>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div id="como-funciona" class="steps-wrap">
+  <div class="wrap">
+    <div class="steps-grid">
+      <div class="step-item reveal">
+        <span class="step-num">01</span>
+        <div class="step-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <h3>Ingresa el pedido</h3>
+        <p>SKUs, kilómetros y si es multiorden. Tarda menos de 10 segundos por pedido.</p>
+      </div>
+      <div class="step-item reveal rd1">
+        <span class="step-num">02</span>
+        <div class="step-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <h3>Ve tu neto al instante</h3>
+        <p>Tarifa base, cobro por SKU, por km y retorno calculado en tiempo real.</p>
+      </div>
+      <div class="step-item reveal rd2">
+        <span class="step-num">03</span>
+        <div class="step-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3>Controla tu historial</h3>
+        <p>Estadísticas por día, exporta en CSV o Excel y respalda cada turno.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="funciones">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-label">Funciones</div>
+      <h2>Todo lo que necesitas para saber cuánto ganas</h2>
+      <p>Herramientas pensadas por y para quienes trabajan por pedido, no por sueldo fijo.</p>
+    </div>
+
+    <div class="feature-row reveal">
+      <div class="feature-text">
+        <span class="feature-label">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Cálculo en tiempo real
+        </span>
+        <h3>Tu neto se calcula solo, al instante</h3>
+        <p>Ingresa SKUs y kilómetros y ControlShopper calcula la tarifa base, el cobro por SKU y por km, y te muestra el neto antes de que sigas trabajando.</p>
+      </div>
+      <div class="feature-shot">
+        
+      </div>
+    </div>
+
+    <div class="feature-row reverse reveal">
+      <div class="feature-text">
+        <span class="feature-label">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Multiorden
+        </span>
+        <h3>Varios pedidos, un solo viaje, sin perder un peso</h3>
+        <p>Registra cada pedido de una ruta con su tarifa reducida y sabe exactamente qué te corresponde por cada uno, incluyendo el retorno.</p>
+      </div>
+      <div class="feature-shot">
+        
+      </div>
+    </div>
+
+    <div class="feature-row reveal">
+      <div class="feature-text">
+        <span class="feature-label">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Estadísticas
+        </span>
+        <h3>Tu neto día por día, siempre a la vista</h3>
+        <p>Navega entre períodos, compara tus mejores y peores días, y entiende de un vistazo cuántos días trabajaste y cuánto te queda limpio.</p>
+      </div>
+      <div class="feature-shot">
+        
+      </div>
+    </div>
+
+    <div class="feature-row reverse reveal">
+      <div class="feature-text">
+        <span class="feature-label">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar
+        </span>
+        <h3>Tus datos, listos cuando los necesites</h3>
+        <p>Exporta en CSV o Excel por rango de fechas. Ideal para llevar un respaldo o resolver cualquier diferencia de pago con la plataforma.</p>
+      </div>
+      <div class="feature-shot">
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section id="para-quien">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-label">Roles</div>
+      <h2>Funciona con todos tus roles</h2>
+      <p>Elige tu modo al empezar el turno y ControlShopper ajusta el cálculo a tu forma de trabajar.</p>
+    </div>
+    <div class="role-cards">
+      <div class="role-card reveal">
+        <div class="role-icon" style="background:rgba(46,207,166,0.11);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2ecfa6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <h4>Shopper</h4>
+        <p>Reparto a domicilio con vehículo propio. Cálculo completo por SKU, km y multiorden.</p>
+      </div>
+      <div class="role-card reveal rd1">
+        <div class="role-icon" style="background:rgba(245,166,35,0.11);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+        </div>
+        <h4>Picker</h4>
+        <p>Preparación en tienda. Registra tus pedidos armados y su tarifa correspondiente.</p>
+      </div>
+      <div class="role-card reveal rd2">
+        <div class="role-icon" style="background:rgba(234,242,239,0.07);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9fb8b2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <h4>Driver</h4>
+        <p>Solo despacho de pedidos ya preparados. Ganancia por viaje, sin complicaciones.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<div id="precio" class="pricing-wrap">
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-label">Precio</div>
+        <h2>Empieza gratis. Sigue por menos que un pedido.</h2>
+        <p>Un mes de ControlShopper cuesta menos que lo que ganas en un solo despacho.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card free reveal">
+          <span class="pricing-badge" style="background:rgba(46,207,166,0.14);color:var(--mint);">3 días gratis</span>
+          <div class="pricing-tier">Prueba</div>
+          <div class="pricing-price">$0</div>
+          <p class="pricing-period">Sin tarjeta · Sin compromiso</p>
+          <ul class="pricing-list">
+            <li>Todas las funciones incluidas</li>
+            <li>Cálculo en tiempo real</li>
+            <li>Multiorden y estadísticas</li>
+            <li>Exportación CSV y Excel</li>
+          </ul>
+        </div>
+        <div class="pricing-card pro reveal rd1">
+          <span class="pricing-badge" style="background:var(--mint);color:#06231c;">Pro</span>
+          <div class="pricing-tier">Mensual</div>
+          <div class="pricing-price"><sup>$</sup>1.690</div>
+          <p class="pricing-period">+ IVA / mes · Por menos de un pedido</p>
+          <ul class="pricing-list">
+            <li>Todo lo de la prueba gratuita</li>
+            <li>Historial ilimitado de turnos</li>
+            <li>Acceso con código de invitación</li>
+            <li>Soporte prioritario</li>
+          </ul>
+          <p class="pricing-note">Cancela cuando quieras</p>
+        </div>
+      </div>
+      <div class="pricing-guarantee reveal rd2">
+        <div class="guarantee-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
+          Sin contrato ni permanencia
+        </div>
+        <div class="guarantee-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+          Cancela en cualquier momento
+        </div>
+        <div class="guarantee-item">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3"/></svg>
+          Tus datos nunca salen de tu celular
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- COMPARISON -->
+<div class="compare-wrap">
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-label">La diferencia</div>
+        <h2>Sin ControlShopper vs. con ControlShopper</h2>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-col bad reveal">
+          <h4>Sin ControlShopper</h4>
+          <ul>
+            <li>Aceptas pedidos sin saber si realmente valen la pena.</li>
+            <li>Pierdes tiempo calculando tarifas a mano al final del turno.</li>
+            <li>No tienes respaldo si hay una diferencia de pago.</li>
+            <li>El multiorden se vuelve un lío de sumas.</li>
+          </ul>
+        </div>
+        <div class="compare-col good reveal rd1">
+          <h4>Con ControlShopper</h4>
+          <ul>
+            <li>Ves tu neto al instante, antes de seguir trabajando.</li>
+            <li>El cálculo de SKUs, km y tarifas corre solo.</li>
+            <li>Exportas tu historial cuando lo necesites como respaldo.</li>
+            <li>Cada pedido de una ruta queda registrado con su tarifa real.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- STATS -->
+<section>
+  <div class="wrap">
+    <div class="stats-band">
+      <div class="reveal">
+        <div class="stat-num">3 días</div>
+        <div class="stat-label">de prueba gratuita</div>
+      </div>
+      <div class="reveal rd1">
+        <div class="stat-num">3 roles</div>
+        <div class="stat-label">Shopper, Picker y Driver</div>
+      </div>
+      <div class="reveal rd2">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">datos en tu dispositivo</div>
+      </div>
+      <div class="reveal rd3">
+        <div class="stat-num">0</div>
+        <div class="stat-label">calculadoras aparte</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="reviews-wrap">
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-label">Testimonios</div>
+        <h2>Lo que dicen quienes ya la usan</h2>
+        <p>Shoppers, pickers y drivers que llevan ControlShopper en cada turno.</p>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card reveal">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Antes calculaba todo a mano al final del turno y siempre me cuadraba mal. Ahora veo el neto de cada pedido al tiro, incluso con multiorden."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#22c99e;">MF</div>
+            <div>
+              <div class="review-name">Maribel F.</div>
+              <div class="review-role">Shopper · Linares</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal rd1">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Lo que más uso es la exportación en Excel. Tuve una diferencia de pago con la plataforma y con mi historial pude reclamar sin problema."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#e8960c;">RC</div>
+            <div>
+              <div class="review-name">Rodrigo C.</div>
+              <div class="review-role">Driver · Talca</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal rd2">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Trabajo como picker y pensé que no era para mí, pero se ajusta perfecto. Las estadísticas por semana me ayudan a planificar mejor mis turnos."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#0f5c4d;">CS</div>
+            <div>
+              <div class="review-name">Camila S.</div>
+              <div class="review-role">Picker · Curicó</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal rd2">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Con el modo Driver puedo ver exactamente cuánto gané por kilómetro. Antes tiraba el turno a la suerte, ahora sé cuándo vale la pena salir."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#1a6b5a;">JP</div>
+            <div>
+              <div class="review-name">Jorge P.</div>
+              <div class="review-role">Driver · Rancagua</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal rd2">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Me sorprendió lo simple que es. Abro la app al empezar el turno y al terminar ya tengo el resumen. El precio me parece justo por lo que entrega."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#f5a623;">VP</div>
+            <div>
+              <div class="review-name">Valeria P.</div>
+              <div class="review-role">Shopper · Santiago</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card reveal rd2">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Llevo tres meses usándola y ya no podría trabajar sin ella. La prueba gratis me convenció desde el primer día. 100% lo recomiendo."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#2ecfa6;">DM</div>
+            <div>
+              <div class="review-name">Diego M.</div>
+              <div class="review-role">Shopper · Concepción</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-label">Preguntas frecuentes</div>
+      <h2>Antes de que preguntes</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" onclick="toggleFaq(this.parentElement)" aria-expanded="false">
+          <span>¿Con qué plataformas funciona ControlShopper?</span><span class="plus" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a" role="region"><div class="faq-a-inner">Funciona de forma independiente a la plataforma de pedidos que uses: tú ingresas los datos del pedido (SKUs, km) y ControlShopper calcula tu neto según tus propias tarifas configuradas.</div></div>
+      </div>
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" onclick="toggleFaq(this.parentElement)" aria-expanded="false">
+          <span>¿Mis datos quedan guardados en algún servidor?</span><span class="plus" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a" role="region"><div class="faq-a-inner">Tu historial vive en tu teléfono. Tú decides cuándo exportarlo en CSV o Excel si quieres tener un respaldo aparte.</div></div>
+      </div>
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" onclick="toggleFaq(this.parentElement)" aria-expanded="false">
+          <span>¿Sirve si trabajo con multiorden?</span><span class="plus" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a" role="region"><div class="faq-a-inner">Sí. Puedes registrar cada pedido de una misma ruta con su tarifa reducida correspondiente, incluyendo el retorno al punto de partida.</div></div>
+      </div>
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" onclick="toggleFaq(this.parentElement)" aria-expanded="false">
+          <span>¿Dónde puedo descargar ControlShopper?</span><span class="plus" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a" role="region"><div class="faq-a-inner">ControlShopper está disponible en Google Play para Android. Búscala como "ControlShopper" o descárgala directamente desde el botón en esta página. Al instalar tienes 3 días de prueba gratis.</div></div>
+      </div>
+      <div class="faq-item" data-open="false">
+        <button class="faq-q" onclick="toggleFaq(this.parentElement)" aria-expanded="false">
+          <span>¿Va a tener versión para iPhone?</span><span class="plus" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-a" role="region"><div class="faq-a-inner">La versión inicial es para Android. Una versión iOS se evaluará según la demanda.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="cta" class="cta-final">
+  <div class="wrap">
+    <h2 class="reveal">Disponible hoy en Google Play</h2>
+    <p class="cta-lead reveal rd1">Descárgala y empieza con 3 días completamente gratis. Sin tarjeta, sin compromiso. Cancela cuando quieras.</p>
+
+    <div class="cta-dl-block reveal rd2">
+      <a class="btn-gplay" href="#" style="padding:18px 38px;">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:30px;height:30px"><path d="M3.18 23.75c.4.22.85.25 1.27.08l13.12-7.57-2.9-2.9-11.49 10.39ZM.64 1.67C.24 2.05 0 2.63 0 3.38v17.24c0 .75.24 1.33.64 1.71L.75 22.4 12.1 11.07v-.27L.75 1.34.64 1.67ZM20.96 9.6l-2.8-1.62L15.2 11l2.97 2.97 2.79-1.61c.8-.46.8-1.2 0-1.76ZM4.45.17C4.03 0 3.58.04 3.18.26l.04.04 11.4 11.4-2.97-2.97L4.45.17Z"/></svg>
+        <span class="btn-gplay-text">
+          <span class="btn-gplay-sub">Disponible en</span>
+          <span class="btn-gplay-main" style="font-size:1.18rem;">Google Play</span>
+        </span>
+      </a>
+      <p class="cta-dl-trust">
+        <span>3 días gratis al instalar</span>
+        <span class="dot"></span>
+        <span>Sin tarjeta requerida</span>
+        <span class="dot"></span>
+        <span>Cancela cuando quieras</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 3h2l.6 3M6.6 6h14l-1.6 8H8L6.6 6Z" stroke="#eaf5f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="9" cy="19" r="1.4" fill="#eaf5f1"/>
+          <circle cx="16" cy="19" r="1.4" fill="#eaf5f1"/>
+        </svg>
+      </div>
+      ControlShopper
+    </div>
+    <p>© 2026 ControlShopper. Control de ingresos para shoppers, pickers y drivers.</p>
+  </div>
+</footer>
+
+<script>
+// FAQ
+function toggleFaq(item) {
+  var open = item.getAttribute('data-open') === 'true';
+  document.querySelectorAll('.faq-item').forEach(function(el) {
+    el.setAttribute('data-open','false');
+    el.querySelector('.faq-a').style.maxHeight = null;
+    el.querySelector('.faq-q').setAttribute('aria-expanded','false');
+  });
+  if (!open) {
+    item.setAttribute('data-open','true');
+    var a = item.querySelector('.faq-a');
+    a.style.maxHeight = a.scrollHeight + 'px';
+    item.querySelector('.faq-q').setAttribute('aria-expanded','true');
+  }
+}
+
+
+// Scroll reveal
+(function() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+})();
+</script>
+
+<!-- WhatsApp floating button -->
+<a class="wa-float" href="https://wa.me/56XXXXXXXXX" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+  </svg>
+</a>
+
+<script>
+// Hamburger menu
+(function(){
+  var btn = document.getElementById('navBurger');
+  var drawer = document.getElementById('navDrawer');
+  if(!btn || !drawer) return;
+  btn.addEventListener('click', function(){
+    var open = drawer.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+    drawer.setAttribute('aria-hidden', !open);
+  });
+  drawer.querySelectorAll('.nav-drawer-link').forEach(function(link){
+    link.addEventListener('click', function(){
+      drawer.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+    });
+  });
+})();
+</script>
+</body>
+</html>
