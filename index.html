@@ -287,13 +287,22 @@ h2 { font-size: clamp(1.9rem, 3.2vw, 2.7rem); font-weight: 900; letter-spacing: 
 .stat-label { color: var(--text-dim); font-size: 0.87rem; margin-top: 7px; line-height: 1.45; }
 
 /* REVIEWS */
-.reviews-wrap { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.reviews-grid {
-  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch; padding-bottom: 12px;
+.reviews-wrap { background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; }
+.reviews-track-outer {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
 }
-.reviews-grid::-webkit-scrollbar { display: none; }
-.reviews-grid { -ms-overflow-style: none; scrollbar-width: none; }
+.reviews-grid {
+  display: flex; gap: 16px;
+  width: max-content;
+  animation: reviews-scroll 42s linear infinite;
+}
+.reviews-grid:hover { animation-play-state: paused; }
+@keyframes reviews-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 .review-card {
   background: var(--card); border: 1px solid var(--line);
   border-radius: var(--radius); padding: 26px 22px;
@@ -1056,79 +1065,210 @@ footer { background: var(--bg-3); }
         <h2>Lo que dicen quienes ya la usan</h2>
         <p>Shoppers, pickers y drivers que llevan ControlShopper en cada turno.</p>
       </div>
-      <div class="reviews-grid">
-        <div class="review-card reveal">
+      <div class="reviews-track-outer">
+      <div class="reviews-grid" aria-label="Testimonios de usuarios">
+        <!-- SET 1 -->
+        <div class="review-card">
           <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
           <div class="review-stars">★★★★★</div>
           <div class="review-text">"Antes calculaba todo a mano al final del turno y siempre me cuadraba mal. Ahora veo el neto de cada pedido al tiro, incluso con multiorden."</div>
           <div class="review-user">
             <div class="review-avatar" style="background:#22c99e;">MF</div>
-            <div>
-              <div class="review-name">Maribel F.</div>
-              <div class="review-role">Shopper · Linares</div>
-            </div>
+            <div><div class="review-name">Maribel F.</div><div class="review-role">Shopper · Linares</div></div>
           </div>
         </div>
-        <div class="review-card reveal rd1">
+        <div class="review-card">
           <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
           <div class="review-stars">★★★★★</div>
           <div class="review-text">"Lo que más uso es la exportación en Excel. Tuve una diferencia de pago con la plataforma y con mi historial pude reclamar sin problema."</div>
           <div class="review-user">
             <div class="review-avatar" style="background:#e8960c;">RC</div>
-            <div>
-              <div class="review-name">Rodrigo C.</div>
-              <div class="review-role">Driver · Talca</div>
-            </div>
+            <div><div class="review-name">Rodrigo C.</div><div class="review-role">Driver · Talca</div></div>
           </div>
         </div>
-        <div class="review-card reveal rd2">
+        <div class="review-card">
           <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
           <div class="review-stars">★★★★★</div>
           <div class="review-text">"Trabajo como picker y pensé que no era para mí, pero se ajusta perfecto. Las estadísticas por semana me ayudan a planificar mejor mis turnos."</div>
           <div class="review-user">
             <div class="review-avatar" style="background:#0f5c4d;">CS</div>
-            <div>
-              <div class="review-name">Camila S.</div>
-              <div class="review-role">Picker · Curicó</div>
-            </div>
+            <div><div class="review-name">Camila S.</div><div class="review-role">Picker · Curicó</div></div>
           </div>
         </div>
-        <div class="review-card reveal rd2">
+        <div class="review-card">
           <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
           <div class="review-stars">★★★★★</div>
           <div class="review-text">"Con el modo Driver puedo ver exactamente cuánto gané por kilómetro. Antes tiraba el turno a la suerte, ahora sé cuándo vale la pena salir."</div>
           <div class="review-user">
             <div class="review-avatar" style="background:#1a6b5a;">JP</div>
-            <div>
-              <div class="review-name">Jorge P.</div>
-              <div class="review-role">Driver · Rancagua</div>
-            </div>
+            <div><div class="review-name">Jorge P.</div><div class="review-role">Driver · Rancagua</div></div>
           </div>
         </div>
-        <div class="review-card reveal rd2">
+        <div class="review-card">
           <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
           <div class="review-stars">★★★★★</div>
           <div class="review-text">"Me sorprendió lo simple que es. Abro la app al empezar el turno y al terminar ya tengo el resumen. El precio me parece justo por lo que entrega."</div>
           <div class="review-user">
             <div class="review-avatar" style="background:#f5a623;">VP</div>
-            <div>
-              <div class="review-name">Valeria P.</div>
-              <div class="review-role">Shopper · Santiago</div>
-            </div>
+            <div><div class="review-name">Valeria P.</div><div class="review-role">Shopper · Santiago</div></div>
           </div>
         </div>
-        <div class="review-card reveal rd2">
+        <div class="review-card">
           <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
           <div class="review-stars">★★★★★</div>
           <div class="review-text">"Llevo tres meses usándola y ya no podría trabajar sin ella. La prueba gratis me convenció desde el primer día. 100% lo recomiendo."</div>
           <div class="review-user">
             <div class="review-avatar" style="background:#2ecfa6;">DM</div>
-            <div>
-              <div class="review-name">Diego M.</div>
-              <div class="review-role">Shopper · Concepción</div>
-            </div>
+            <div><div class="review-name">Diego M.</div><div class="review-role">Shopper · Concepción</div></div>
           </div>
         </div>
+        <!-- 5 NUEVAS -->
+        <div class="review-card">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Hago multiorden casi todos los días. Con ControlShopper dejo de perder plata sin darme cuenta — sé exactamente qué me corresponde en cada ruta."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#3b82f6;">FV</div>
+            <div><div class="review-name">Felipe V.</div><div class="review-role">Driver · Viña del Mar</div></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Soy picker de fin de semana y me sirve igual. El resumen semanal me muestra cuánto saqué limpio y puedo comparar con semanas anteriores."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#8b5cf6;">AT</div>
+            <div><div class="review-name">Andrea T.</div><div class="review-role">Picker · Temuco</div></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Me costaba decidir si aceptar o rechazar un pedido largo. Ahora con la app veo el cálculo antes de salir y tomo mejores decisiones. Me cambió el turno."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#ef4444;">NR</div>
+            <div><div class="review-name">Nicolás R.</div><div class="review-role">Shopper · Antofagasta</div></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Pensé que 1.690 era caro hasta que vi cuánto ganaba de más al mes por no perder pedidos mal calculados. Se paga solo en el primer día."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#10b981;">KM</div>
+            <div><div class="review-name">Karen M.</div><div class="review-role">Driver · La Serena</div></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"La recomendé a tres compañeros del trabajo. Todos la están usando. Es la app que le faltaba a cualquiera que trabaje en plataformas de despacho."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#f59e0b;">PL</div>
+            <div><div class="review-name">Pablo L.</div><div class="review-role">Shopper · Iquique</div></div>
+          </div>
+        </div>
+        <!-- SET 2 (duplicado para loop continuo) -->
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Antes calculaba todo a mano al final del turno y siempre me cuadraba mal. Ahora veo el neto de cada pedido al tiro, incluso con multiorden."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#22c99e;">MF</div>
+            <div><div class="review-name">Maribel F.</div><div class="review-role">Shopper · Linares</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Lo que más uso es la exportación en Excel. Tuve una diferencia de pago con la plataforma y con mi historial pude reclamar sin problema."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#e8960c;">RC</div>
+            <div><div class="review-name">Rodrigo C.</div><div class="review-role">Driver · Talca</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Trabajo como picker y pensé que no era para mí, pero se ajusta perfecto. Las estadísticas por semana me ayudan a planificar mejor mis turnos."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#0f5c4d;">CS</div>
+            <div><div class="review-name">Camila S.</div><div class="review-role">Picker · Curicó</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Con el modo Driver puedo ver exactamente cuánto gané por kilómetro. Antes tiraba el turno a la suerte, ahora sé cuándo vale la pena salir."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#1a6b5a;">JP</div>
+            <div><div class="review-name">Jorge P.</div><div class="review-role">Driver · Rancagua</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Me sorprendió lo simple que es. Abro la app al empezar el turno y al terminar ya tengo el resumen. El precio me parece justo por lo que entrega."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#f5a623;">VP</div>
+            <div><div class="review-name">Valeria P.</div><div class="review-role">Shopper · Santiago</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Llevo tres meses usándola y ya no podría trabajar sin ella. La prueba gratis me convenció desde el primer día. 100% lo recomiendo."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#2ecfa6;">DM</div>
+            <div><div class="review-name">Diego M.</div><div class="review-role">Shopper · Concepción</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Hago multiorden casi todos los días. Con ControlShopper dejo de perder plata sin darme cuenta — sé exactamente qué me corresponde en cada ruta."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#3b82f6;">FV</div>
+            <div><div class="review-name">Felipe V.</div><div class="review-role">Driver · Viña del Mar</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Soy picker de fin de semana y me sirve igual. El resumen semanal me muestra cuánto saqué limpio y puedo comparar con semanas anteriores."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#8b5cf6;">AT</div>
+            <div><div class="review-name">Andrea T.</div><div class="review-role">Picker · Temuco</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Me costaba decidir si aceptar o rechazar un pedido largo. Ahora con la app veo el cálculo antes de salir y tomo mejores decisiones. Me cambió el turno."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#ef4444;">NR</div>
+            <div><div class="review-name">Nicolás R.</div><div class="review-role">Shopper · Antofagasta</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Pensé que 1.690 era caro hasta que vi cuánto ganaba de más al mes por no perder pedidos mal calculados. Se paga solo en el primer día."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#10b981;">KM</div>
+            <div><div class="review-name">Karen M.</div><div class="review-role">Driver · La Serena</div></div>
+          </div>
+        </div>
+        <div class="review-card" aria-hidden="true">
+          <div class="review-verified"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Usuario verificado</div>
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"La recomendé a tres compañeros del trabajo. Todos la están usando. Es la app que le faltaba a cualquiera que trabaje en plataformas de despacho."</div>
+          <div class="review-user">
+            <div class="review-avatar" style="background:#f59e0b;">PL</div>
+            <div><div class="review-name">Pablo L.</div><div class="review-role">Shopper · Iquique</div></div>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   </section>
